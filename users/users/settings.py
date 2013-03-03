@@ -142,6 +142,9 @@ INSTALLED_APPS = (
     #PROJECT APLICATIONS
     'users.apps.UserProfiles',
 
+    #third party apps
+    'oauth2app',
+
 )
 
 # A sample logging configuration. The only tangible logging
