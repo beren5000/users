@@ -1,5 +1,6 @@
 # Django settings for users project.
 import os.path
+from deploy import DEPLOY
 from django.core.files.storage import FileSystemStorage
 
 PROJECT_DIR = os.path.dirname(__file__)
@@ -14,16 +15,30 @@ ADMINS = (
 
 MANAGERS = ADMINS
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '%s/database.db' % PROJECT_PATH,# Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+if DEPLOY == "DEVELOPMENT":
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+            'NAME': '%s/database.db' % PROJECT_PATH,                      # Or path to database file if using sqlite3.
+            'USER': '',                      # Not used with sqlite3.
+            'PASSWORD': '',                  # Not used with sqlite3.
+            'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
+            'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        }
     }
-}
+
+if DEPLOY == "PRODUCTION":
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
+            'NAME': 'theusers',               # Or path to database file if using sqlite3.
+            'USER': 'superuser',                       # Not used with sqlite3.
+            'PASSWORD': '@Q1m3r4#users@',           # Not used with sqlite3.
+            'HOST': '',                            # Set to empty string for localhost. Not used with sqlite3.
+            'PORT': '',                            # Set to empty string for default. Not used with sqlite3.
+        }
+    }
 
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
@@ -74,6 +89,9 @@ MEDIA_URL = '/media/'
 # Example: "/home/media/media.lawrence.com/static/"
 STATIC_ROOT = os.path.join(PROJECT_DIR, 'static').replace('\\', '/')
 STATIC_FILES_ROOT = os.path.join(PROJECT_DIR, 'security').replace('\\', '/')
+if DEPLOY == "PRODUCTION":
+    STATIC_ROOT = "/home/beren5000/webapps/usersjuicenotestat"
+    STATIC_FILES_ROOT = os.path.join(PROJECT_DIR, 'security').replace('\\', '/')
 
 
 
@@ -143,8 +161,9 @@ INSTALLED_APPS = (
     'users.apps.UserProfiles',
 
     #third party apps
-    'oauth2app',
-
+    'rest_framework',
+    'provider',
+    'provider.oauth2',
 )
 
 # A sample logging configuration. The only tangible logging
